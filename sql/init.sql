@@ -18,7 +18,7 @@ CREATE TABLE `sys_user` (
   `real_name`     VARCHAR(64)  DEFAULT NULL COMMENT '姓名',
   `phone`         VARCHAR(16)  DEFAULT NULL COMMENT '手机号(脱敏显示)',
   `email`         VARCHAR(128) DEFAULT NULL COMMENT '邮箱(脱敏显示)',
-  `status`        TINYINT      NOT NULL DEFAULT 1 COMMENT '状态 1正常 0锁定',
+  `status`        INT          NOT NULL DEFAULT 1 COMMENT '状态 1正常 0锁定',
   `fail_count`    INT          NOT NULL DEFAULT 0 COMMENT '连续登录失败次数(>=3锁定)',
   `created_at`    DATETIME     DEFAULT CURRENT_TIMESTAMP,
   `updated_at`    DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -208,6 +208,24 @@ CREATE TABLE `sys_backup_log` (
   `backup_time`  DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '备份时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB COMMENT='备份记录';
+
+DROP TABLE IF EXISTS `sys_backup_config`;
+CREATE TABLE `sys_backup_config` (
+  `id`        BIGINT      NOT NULL AUTO_INCREMENT,
+  `frequency` VARCHAR(16) NOT NULL DEFAULT 'daily' COMMENT '备份频率(daily/hourly/weekly)',
+  `storage`   VARCHAR(16) NOT NULL DEFAULT 'local' COMMENT '存储位置(local/oss/dual)',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB COMMENT='备份策略配置';
+
+DROP TABLE IF EXISTS `sys_restore_log`;
+CREATE TABLE `sys_restore_log` (
+  `id`          BIGINT      NOT NULL AUTO_INCREMENT,
+  `operator`    VARCHAR(64) NOT NULL COMMENT '恢复人',
+  `backup_id`   BIGINT      DEFAULT NULL COMMENT '备份点ID',
+  `backup_time` DATETIME    DEFAULT NULL COMMENT '备份点时间',
+  `restored_at` DATETIME    DEFAULT NULL COMMENT '恢复时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB COMMENT='恢复操作日志';
 
 -- -----------------------------------------------------------
 -- 6. 异常预警
