@@ -1,0 +1,41 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: ledger-backend
+  # 默认使用 dev 环境（H2 内存库，无需安装 MySQL 即可运行）
+  # 生产环境启动时指定：--spring.profiles.active=prod
+  profiles:
+    active: dev
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+# 业务配置
+app:
+  # 企业名称（报表导出文件命名用，如「XX 公司 202510 财务报表.xlsx」）
+  enterprise-name: 小微企业
+  # JWT 签名密钥与有效期（权限控制模块）
+  jwt:
+    secret: sme-ledger-jwt-secret-2026
+    expire-minutes: 120
+  # 资质文件上传目录
+  upload-dir: ./uploads
+  # 数据备份文件目录（数据备份与恢复模块）
+  backup-dir: ./backups
+  # 资质到期提醒提前天数
+  expiry-remind-days: 15

@@ -1,0 +1,37 @@
+# ---- Java / Maven ----
+backend/target/
+*.class
+*.jar
+!.mvn/wrapper/maven-wrapper.jar
+
+# ---- Node / 前端 ----
+frontend/node_modules/
+frontend/dist/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ---- IDE ----
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# ---- OS ----
+.DS_Store
+Thumbs.db
+
+# ---- 本地配置（含数据库密码等敏感信息） ----
+application-local.yml
+.env
+.env.local
+
+# ---- 运行时数据 ----
+*.log
+data/
+# 后端运行时生成：资质文件上传、数据备份、H2 文件库残留
+backend/uploads/
+backend/backups/
+*.mv.db
+*.trace.db
+hs_err_pid*.log
