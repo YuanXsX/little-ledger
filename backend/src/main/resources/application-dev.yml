@@ -1,14 +1,15 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:ledger;MODE=MySQL;DB_CLOSE_DELAY=-1
-    driver-class-name: org.h2.Driver
-    username: sa
-    password: ""
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:ledger}?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: false
+    properties:
+      hibernate:
+        # Hibernate 6 + MySQL：boolean 默认映射 bit，而 init.sql 用 tinyint(布尔)，统一为 tinyint 避免类型不一致
+        type:
+          preferred_boolean_jdbc_type: TINYINT

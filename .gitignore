@@ -32,6 +32,7 @@ data/
 # 后端运行时生成：资质文件上传、数据备份、H2 文件库残留
 backend/uploads/
 backend/backups/
+backups/
 *.mv.db
 *.trace.db
 hs_err_pid*.log

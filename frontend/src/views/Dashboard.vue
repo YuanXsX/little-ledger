@@ -1,51 +1,73 @@
 <template>
-  <div>
+  <div v-loading="loading">
     <el-card class="welcome">
-      <h3>欢迎使用小微企业数字化台账管理系统</h3>
-      <p>脚手架已就绪。前后端联通状态：</p>
-      <el-tag :type="connected ? 'success' : 'danger'">
-        {{ connected ? '后端已连接' : '后端未连接（请先启动 backend）' }}
-      </el-tag>
+      <div class="welcome-title">欢迎回来，{{ username }}</div>
+      <div class="welcome-sub">以下是当前企业经营概览</div>
     </el-card>
 
-    <el-row :gutter="16" class="stats">
-      <el-col :span="8">
-        <el-card><div class="stat">财务流水台账</div></el-card>
-      </el-col>
-      <el-col :span="8">
-        <el-card><div class="stat">库存明细台账</div></el-card>
-      </el-col>
-      <el-col :span="8">
-        <el-card><div class="stat">客户信息台账</div></el-card>
+    <!-- KPI 指标卡片 -->
+    <el-row :gutter="16" class="metrics">
+      <el-col v-for="m in metrics" :key="m.name" :span="6">
+        <el-card shadow="hover" class="metric-card">
+          <div class="metric-name">{{ m.name }}</div>
+          <div class="metric-value">{{ m.value }}</div>
+        </el-card>
       </el-col>
     </el-row>
+
+    <el-empty v-if="!loading && metrics.length === 0" description="暂无经营数据，请先录入台账" />
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
-import request from '@/api/request'
+import { computed, onMounted, ref } from 'vue'
+import { getReportOverview } from '@/api/report'
 
-const connected = ref(false)
+const metrics = ref([])
+const loading = ref(false)
 
-// 启动时调用后端健康检查，验证前后端联通
-onMounted(async () => {
+const user = JSON.parse(localStorage.getItem('user') || '{}')
+const username = computed(() => user.realName || user.username || '管理员')
+
+async function load() {
+  loading.value = true
   try {
-    const res = await request.get('/ping')
-    connected.value = res.code === 200
-  } catch {
-    connected.value = false
+    const res = await getReportOverview()
+    metrics.value = res.data.metrics
+  } finally {
+    loading.value = false
   }
-})
+}
+
+onMounted(load)
 </script>
 
 <style scoped>
 .welcome {
   margin-bottom: 16px;
 }
-.stats .stat {
+.welcome-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #1f3a5f;
+}
+.welcome-sub {
+  margin-top: 4px;
+  font-size: 13px;
+  color: #909399;
+}
+.metric-card {
   text-align: center;
-  font-size: 16px;
-  padding: 20px 0;
+  margin-bottom: 12px;
+}
+.metric-name {
+  color: #909399;
+  font-size: 13px;
+}
+.metric-value {
+  font-size: 22px;
+  font-weight: bold;
+  margin-top: 6px;
+  color: #1f3a5f;
 }
 </style>
