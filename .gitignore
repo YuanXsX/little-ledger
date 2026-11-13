@@ -26,6 +26,10 @@ application-local.yml
 .env
 .env.local
 
+# ---- 项目需求文档（实训规格/技能矩阵，不提交仓库） ----
+1.txt
+2.txt
+
 # ---- 运行时数据 ----
 *.log
 data/
