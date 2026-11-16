@@ -1,0 +1,217 @@
+/**
+ * 全局主题与设计令牌
+ * ------------------------------------------------------------------
+ * 1) 统一色板 / 圆角 / 阴影，供各页面复用；
+ * 2) 覆盖 Element Plus 的 CSS 变量，使全站组件风格一致；
+ * 3) 提供少量通用工具类与路由切换动画。
+ */
+
+:root {
+  /* 应用色板 */
+  --app-bg: #f4f6fb;
+  --app-card: #ffffff;
+  --app-border: #e9edf4;
+  --app-text: #1f2937;
+  --app-text-sub: #6b7280;
+  --app-text-mute: #9aa4b2;
+
+  /* 品牌主色（与侧栏深蓝形成层次） */
+  --app-primary: #2563eb;
+  --app-primary-deep: #1e4fbc;
+  --app-accent: #0ea5a4;
+  --app-warning: #f59e0b;
+  --app-danger: #ef4444;
+  --app-violet: #7c3aed;
+
+  /* 侧栏渐变色 */
+  --app-nav-from: #142e50;
+  --app-nav-to: #0d1f38;
+
+  /* 形状与阴影 */
+  --app-radius: 14px;
+  --app-radius-sm: 10px;
+  --app-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 8px 24px rgba(16, 24, 40, 0.04);
+  --app-shadow-lg: 0 16px 40px rgba(16, 24, 40, 0.12);
+
+  /* Element Plus 主题变量覆盖 */
+  --el-color-primary: #2563eb;
+  --el-color-primary-light-3: #6692f1;
+  --el-color-primary-light-5: #92b1f5;
+  --el-color-primary-light-7: #bed0f9;
+  --el-color-primary-light-8: #d3e0fb;
+  --el-color-primary-light-9: #e9effd;
+  --el-color-primary-dark-2: #1e4fbc;
+  --el-color-success: #16a34a;
+  --el-color-warning: #f59e0b;
+  --el-color-danger: #ef4444;
+  --el-color-info: #64748b;
+  --el-border-radius-base: 8px;
+  --el-border-radius-small: 6px;
+  --el-text-color-primary: #1f2937;
+  --el-text-color-regular: #4b5563;
+  --el-border-color-lighter: #edf0f5;
+  --el-font-size-base: 14px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--app-bg);
+  color: var(--app-text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
+    'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---------------- 通用工具类 ---------------- */
+
+/* 数字等宽，金额/统计对齐更整齐 */
+.num {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
+.muted {
+  color: var(--app-text-sub);
+}
+
+/* 页面外层：统一内边距与最大宽度 */
+.page {
+  padding: 20px 24px 32px;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+/* ---------------- Element Plus 细节统一 ---------------- */
+
+.el-card {
+  border-radius: var(--app-radius);
+  border: 1px solid var(--app-border);
+  box-shadow: var(--app-shadow);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.el-card__header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--app-border);
+  font-weight: 600;
+}
+
+.el-button {
+  font-weight: 500;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.el-button:not(.is-text):not(.is-link):active {
+  transform: translateY(1px);
+}
+
+.el-button--primary:not(.is-link):not(.is-text) {
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.24);
+}
+
+.el-table {
+  --el-table-border-color: #eef1f6;
+  --el-table-header-bg-color: #f8fafc;
+  --el-table-row-hover-bg-color: #f6f9ff;
+  border-radius: var(--app-radius-sm);
+}
+
+.el-table th.el-table__cell {
+  background: #f8fafc !important;
+  color: #475569;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.el-table td.el-table__cell {
+  padding: 10px 0;
+}
+
+.el-dialog {
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.el-dialog__header {
+  margin-right: 0;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--app-border);
+}
+
+.el-dialog__body {
+  padding: 20px 22px;
+}
+
+.el-dialog__footer {
+  padding: 14px 22px 18px;
+  border-top: 1px solid var(--app-border);
+}
+
+.el-tag {
+  border-radius: 6px;
+}
+
+.el-pagination {
+  font-weight: 500;
+}
+
+.el-input__wrapper,
+.el-select__wrapper,
+.el-textarea__inner {
+  border-radius: 8px;
+}
+
+/* 细滚动条，避免默认样式过于笨重 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cfd6e2;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b6c0d0;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ---------------- 路由切换动画 ---------------- */
+
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+
+/* ---------------- 窄屏适配 ---------------- */
+
+@media (max-width: 768px) {
+  .page {
+    padding: 14px 14px 24px;
+  }
+}
