@@ -48,7 +48,7 @@
           <el-icon><Bell /></el-icon>
           <span>异常预警</span>
         </el-menu-item>
-        <el-menu-item index="/dashboard">
+        <el-menu-item v-if="can('assistant:ask')" index="/ai">
           <el-icon><ChatDotRound /></el-icon>
           <span>财税 AI 助手</span>
         </el-menu-item>

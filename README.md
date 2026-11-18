@@ -10,7 +10,7 @@
 | 后端 | Spring Boot 3.3 + Spring Data JPA + Spring Security + Spring Validation |
 | 数据库 | MySQL 8（开发环境内置 H2 内存库，无需安装即可运行） |
 | 接口文档 | SpringDoc OpenAPI（`/swagger-ui.html`） |
-| AI（后续阶段） | LLM API + 轻量向量库（RAG 财税知识库） |
+| AI | OpenAI 兼容 LLM（默认 DeepSeek，Key 通过环境变量 `DEEPSEEK_API_KEY` 注入）+ 关键词检索知识库 |
 
 ## 目录结构
 
@@ -91,4 +91,4 @@ npm run dev
 - [ ] 敏感数据脱敏存储与展示、字段级加密
 - [ ] 定时备份与异常恢复逻辑
 - [ ] 库存预警规则与多渠道通知
-- [ ] 财税 RAG 知识库与 AI 问答
+- [x] 财税 RAG 知识库与 AI 问答（知识库文档上传解析 + 关键词检索 + DeepSeek/OpenAI 兼容 LLM，未配置 Key 时自动降级为检索原文 + 台账规则提示）

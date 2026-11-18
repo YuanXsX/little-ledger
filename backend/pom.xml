@@ -82,6 +82,13 @@
             <version>1.3.30</version>
         </dependency>
 
+        <!-- PDF 文本提取（财税 RAG 助手知识库文档解析） -->
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>3.0.3</version>
+        </dependency>
+
         <!-- 测试 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

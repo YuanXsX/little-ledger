@@ -277,8 +277,20 @@ CREATE TABLE `biz_knowledge_doc` (
   `file_path`  VARCHAR(255) DEFAULT NULL COMMENT '源文件路径',
   `status`     VARCHAR(16)  DEFAULT 'PENDING' COMMENT '解析状态(PENDING/PARSED/FAILED)',
   `created_by` VARCHAR(64)  DEFAULT NULL COMMENT '上传人',
+  `remark`     VARCHAR(500) DEFAULT NULL COMMENT '备注(解析失败原因等)',
   `created_at` DATETIME     DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB COMMENT='财税知识库文档(用于RAG向量化)';
+
+DROP TABLE IF EXISTS `biz_knowledge_chunk`;
+CREATE TABLE `biz_knowledge_chunk` (
+  `id`          BIGINT       NOT NULL AUTO_INCREMENT,
+  `doc_id`      BIGINT       NOT NULL COMMENT '所属文档ID',
+  `chunk_index` INT          NOT NULL DEFAULT 0 COMMENT '分块序号(从0开始)',
+  `content`     VARCHAR(2000) NOT NULL COMMENT '分块文本',
+  `created_at`  DATETIME     DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_chunk_doc` (`doc_id`)
+) ENGINE=InnoDB COMMENT='知识库文档解析分块(关键词检索数据源)';
 
 SET FOREIGN_KEY_CHECKS = 1;

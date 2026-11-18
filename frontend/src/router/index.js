@@ -83,6 +83,12 @@ const routes = [
         name: 'Alerts',
         component: () => import('@/views/alert/AlertList.vue'),
         meta: { title: '异常预警' }
+      },
+      {
+        path: 'ai',
+        name: 'AiAssistant',
+        component: () => import('@/views/ai/AiAssistant.vue'),
+        meta: { title: '财税 AI 助手' }
       }
     ]
   }
