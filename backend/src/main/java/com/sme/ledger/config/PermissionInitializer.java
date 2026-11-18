@@ -64,7 +64,9 @@ public class PermissionInitializer implements CommandLineRunner {
             {"backup", "config", "配置备份策略"},
             {"alert", "view", "查看预警"},
             {"alert", "resolve", "处理预警"},
-            {"alert", "config", "配置预警规则"}
+            {"alert", "config", "配置预警规则"},
+            {"assistant", "ask", "AI 智能问答"},
+            {"assistant", "doc", "知识库文档管理"}
     };
 
     private static final Map<String, String> ROLE_NAMES = Map.of(
@@ -95,6 +97,8 @@ public class PermissionInitializer implements CommandLineRunner {
     @Transactional
     public void run(String... args) {
         if (permissionRepository.count() > 0) {
+            // 已有权限数据（如 MySQL 存量库）：仅补齐新版本新增的权限点并授予对应角色，幂等
+            syncPermissions();
             return;
         }
         Map<String, SysPermission> perms = seedPermissions();
@@ -106,17 +110,45 @@ public class PermissionInitializer implements CommandLineRunner {
         seedUsers();
     }
 
+    /** 幂等种子权限点：已存在则复用，缺失则创建（新版本上线时自动补齐） */
     private Map<String, SysPermission> seedPermissions() {
         Map<String, SysPermission> map = new HashMap<>();
         for (String[] p : PERMISSIONS) {
-            SysPermission perm = new SysPermission();
-            perm.setModule(p[0]);
-            perm.setOperation(p[1]);
-            perm.setName(p[2]);
-            permissionRepository.save(perm);
+            SysPermission perm = permissionRepository.findByModuleAndOperation(p[0], p[1])
+                    .orElseGet(() -> {
+                        SysPermission np = new SysPermission();
+                        np.setModule(p[0]);
+                        np.setOperation(p[1]);
+                        np.setName(p[2]);
+                        return np;
+                    });
+            if (perm.getId() == null) {
+                permissionRepository.save(perm);
+            }
             map.put(perm.getKey(), perm);
         }
         return map;
+    }
+
+    /** 存量库增量同步：只补授缺失的角色-权限关系，不移除既有授权 */
+    private void syncPermissions() {
+        Map<String, SysPermission> perms = seedPermissions();
+        Map<String, List<String>> rolePerms = rolePermissionMap(new ArrayList<>(perms.keySet()));
+        for (Map.Entry<String, List<String>> entry : rolePerms.entrySet()) {
+            roleRepository.findByRoleCode(entry.getKey()).ifPresent(role -> {
+                boolean changed = false;
+                for (String key : entry.getValue()) {
+                    SysPermission p = perms.get(key);
+                    if (p != null && !role.getPermissions().contains(p)) {
+                        role.getPermissions().add(p);
+                        changed = true;
+                    }
+                }
+                if (changed) {
+                    roleRepository.save(role);
+                }
+            });
+        }
     }
 
     private Map<String, List<String>> rolePermissionMap(List<String> allKeys) {
@@ -124,11 +156,11 @@ public class PermissionInitializer implements CommandLineRunner {
         map.put("OWNER", allKeys);
         map.put("FINANCE", List.of(
                 "finance:view", "finance:create", "finance:update", "finance:delete", "finance:export",
-                "customer:view", "report:view", "report:export"));
+                "customer:view", "report:view", "report:export", "assistant:ask"));
         map.put("KEEPER", List.of(
                 "inventory:view", "inventory:create", "inventory:update", "inventory:delete", "inventory:export",
-                "customer:view", "report:view", "alert:view", "alert:resolve"));
-        map.put("EMPLOYEE", List.of("finance:view", "inventory:view", "customer:view", "report:view"));
+                "customer:view", "report:view", "alert:view", "alert:resolve", "assistant:ask"));
+        map.put("EMPLOYEE", List.of("finance:view", "inventory:view", "customer:view", "report:view", "assistant:ask"));
         return map;
     }
 

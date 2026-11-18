@@ -18,6 +18,10 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
 springdoc:
   swagger-ui:
@@ -39,3 +43,10 @@ app:
   backup-dir: ./backups
   # 资质到期提醒提前天数
   expiry-remind-days: 15
+  # 财税 AI 助手：OpenAI 兼容大模型接入（默认 DeepSeek，可换成通义千问等兼容服务）
+  ai:
+    base-url: https://api.deepseek.com
+    # 留空则问答自动降级为「知识库检索 + 台账规则提示」，不影响系统其他功能
+    api-key: ${DEEPSEEK_API_KEY:}
+    model: deepseek-chat
+    timeout-seconds: 30

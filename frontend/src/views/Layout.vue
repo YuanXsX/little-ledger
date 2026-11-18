@@ -66,9 +66,9 @@
           <template #title>异常预警</template>
         </el-menu-item>
 
-        <el-menu-item index="/ai">
+        <el-menu-item v-if="can('assistant:ask')" index="/ai">
           <el-icon><ChatDotRound /></el-icon>
-          <template #title>财税助手</template>
+          <template #title>财税 AI 助手</template>
         </el-menu-item>
 
         <el-sub-menu v-if="can('user:view') || can('role:view') || can('backup:view')" index="system">
